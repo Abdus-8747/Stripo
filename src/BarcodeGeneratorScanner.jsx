@@ -54,9 +54,9 @@ export default function BarcodeGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Navigation */}
-      <nav className="relative z-10 px-6 py-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      {/* Navbar */}
+      <nav className="relative z-10 px-4 sm:px-6 py-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -85,32 +85,34 @@ export default function BarcodeGenerator() {
       </nav>
 
       {/* Main Content */}
-      <main className="px-6 py-12">
+      <main className="px-4 sm:px-6 py-12">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
+          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">Barcode Generator</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">Barcode Generator</h2>
               <p className="text-gray-300">Enter your data below to generate a professional barcode</p>
             </div>
 
             <div className="space-y-6">
+              {/* Input */}
               <div>
-                <label className="block mb-3 font-medium text-white text-lg">
+                <label className="block mb-2 font-medium text-white text-lg">
                   Enter Value to Generate Barcode:
                 </label>
                 <input
                   type="text"
                   value={barcodeValue}
                   onChange={(e) => setBarcodeValue(e.target.value)}
-                  className="w-full px-6 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g. 705632441947"
                 />
 
+                {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-4">
                   <button
                     onClick={generateBarcode}
                     disabled={!barcodeValue || isGenerating}
-                    className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-2xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
+                    className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
                   >
                     {isGenerating ? (
                       <>
@@ -130,7 +132,7 @@ export default function BarcodeGenerator() {
                   <button
                     onClick={downloadBarcode}
                     disabled={!barcodeValue}
-                    className="flex-1 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-2xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
+                    className="flex-1 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -145,16 +147,18 @@ export default function BarcodeGenerator() {
                 </div>
               </div>
 
-              {/* Barcode Display */}
-              <div className="bg-white rounded-2xl p-8 shadow-2xl">
+              {/* Barcode Preview */}
+              <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl overflow-x-auto">
                 <div className="text-center">
                   {barcodeValue ? (
                     <div className="space-y-4">
-                      <svg
-                        ref={svgRef}
-                        className="mx-auto"
-                        style={{ maxWidth: "100%", height: "auto" }}
-                      ></svg>
+                      <div className="inline-block min-w-full">
+                        <svg
+                          ref={svgRef}
+                          className="mx-auto"
+                          style={{ height: "auto", maxWidth: "100%" }}
+                        ></svg>
+                      </div>
                       <p className="text-gray-600 text-sm">
                         Click "Generate" to create your barcode, then "Download" to save it.
                       </p>
@@ -177,7 +181,7 @@ export default function BarcodeGenerator() {
                 </div>
               </div>
 
-              {/* Tips */}
+              {/* Tips Section */}
               <div className="bg-blue-500/10 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20">
                 <h4 className="text-white font-semibold mb-3 flex items-center">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
