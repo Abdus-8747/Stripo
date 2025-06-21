@@ -21,7 +21,7 @@ export const LandingPage = () => (
           <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
           <a href="#about" className="text-gray-300 hover:text-white transition-colors">About</a>
           <a
-            href="https://github.com/Abdus-8747/Stripo-Barcode-Generator"
+            href="https://github.com/Abdus-8747/Stripo"
             className="text-gray-300 hover:text-white transition-colors"
             target="_blank"
             rel="noopener noreferrer"
