@@ -1,44 +1,35 @@
-import { useState, useRef } from "react";
-import JsBarcode from "jsbarcode";
+import { useState } from "react";
+import QRCode from "qrcode";
 
-export default function BarcodeGenerator() {
-  const [barcodeValue, setBarcodeValue] = useState("");
+export default function QRCodeGenerator() {
+  const [qrValue, setQrValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const svgRef = useRef(null);
+  const [qrDataUrl, setQrDataUrl] = useState("");
 
-  const generateBarcode = () => {
-    const svg = svgRef.current;
-    if (svg && barcodeValue) {
-      setIsGenerating(true);
-      JsBarcode(svg, barcodeValue, {
-        format: "CODE128",
-        width: 3,
-        height: 100,
-        displayValue: true,
-        fontSize: 18,
-        margin: 10,
+  const generateQRCode = async () => {
+    if (!qrValue) return;
+    setIsGenerating(true);
+
+    try {
+      const dataUrl = await QRCode.toDataURL(qrValue, {
+        width: 300,
+        margin: 2,
       });
-      setTimeout(() => {
-        setIsGenerating(false);
-      }, 300);
+      setQrDataUrl(dataUrl);
+    } catch (error) {
+      console.error("QR code generation failed:", error);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const downloadBarcode = () => {
-    const svg = svgRef.current;
-    if (!svg) return;
-
-    const serializer = new XMLSerializer();
-    const svgString = serializer.serializeToString(svg);
-    const blob = new Blob([svgString], { type: "image/svg+xml" });
-    const url = URL.createObjectURL(blob);
+  const downloadQRCode = () => {
+    if (!qrDataUrl) return;
 
     const link = document.createElement("a");
-    link.href = url;
-    link.download = "barcode.svg";
+    link.href = qrDataUrl;
+    link.download = "qrcode.png";
     link.click();
-
-    URL.revokeObjectURL(url);
   };
 
   return (
@@ -77,29 +68,29 @@ export default function BarcodeGenerator() {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-2">Barcode Generator</h2>
-              <p className="text-gray-300">Enter your data below to generate a professional barcode</p>
+              <h2 className="text-3xl font-bold text-white mb-2">QR Code Generator</h2>
+              <p className="text-gray-300">Enter text or a link below to generate a professional QR code</p>
             </div>
 
             <div className="space-y-6">
               {/* Input */}
               <div>
                 <label className="block mb-2 font-medium text-white text-lg">
-                  Enter Value to Generate Barcode:
+                  Enter Data or Link:
                 </label>
                 <input
                   type="text"
-                  value={barcodeValue}
-                  onChange={(e) => setBarcodeValue(e.target.value)}
+                  value={qrValue}
+                  onChange={(e) => setQrValue(e.target.value)}
                   className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g. 705632441947"
+                  placeholder="e.g. https://example.com"
                 />
 
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-4">
                   <button
-                    onClick={generateBarcode}
-                    disabled={!barcodeValue || isGenerating}
+                    onClick={generateQRCode}
+                    disabled={!qrValue || isGenerating}
                     className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
                   >
                     {isGenerating ? (
@@ -118,8 +109,8 @@ export default function BarcodeGenerator() {
                   </button>
 
                   <button
-                    onClick={downloadBarcode}
-                    disabled={!barcodeValue}
+                    onClick={downloadQRCode}
+                    disabled={!qrDataUrl}
                     className="flex-1 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,20 +126,19 @@ export default function BarcodeGenerator() {
                 </div>
               </div>
 
-              {/* Barcode Preview */}
+              {/* QR Code Preview */}
               <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl overflow-x-auto">
                 <div className="text-center">
-                  {barcodeValue ? (
+                  {qrDataUrl ? (
                     <div className="space-y-4">
-                      <div className="inline-block min-w-full">
-                        <svg
-                          ref={svgRef}
-                          className="mx-auto"
-                          style={{ height: "auto", maxWidth: "100%" }}
-                        ></svg>
-                      </div>
+                      <img
+                        src={qrDataUrl}
+                        alt="QR Code"
+                        className="mx-auto"
+                        style={{ maxWidth: "100%", height: "auto" }}
+                      />
                       <p className="text-gray-600 text-sm">
-                        Click "Generate" to create your barcode, then "Download" to save it.
+                        Click "Download" to save your QR code as an image.
                       </p>
                     </div>
                   ) : (
@@ -162,7 +152,7 @@ export default function BarcodeGenerator() {
                           />
                         </svg>
                       </div>
-                      <p className="text-gray-400 italic">Your barcode will appear here</p>
+                      <p className="text-gray-400 italic">Your QR code will appear here</p>
                       <p className="text-gray-500 text-sm mt-2">Enter a value above to get started</p>
                     </div>
                   )}
@@ -183,9 +173,9 @@ export default function BarcodeGenerator() {
                   Tips for best results:
                 </h4>
                 <ul className="text-gray-300 text-sm space-y-1">
-                  <li>• Use alphanumeric characters for optimal compatibility</li>
-                  <li>• Avoid special characters that might not scan well</li>
-                  <li>• Test your barcode with a scanner before mass production</li>
+                  <li>• Links should start with https:// for best scanning results</li>
+                  <li>• Keep your text short for smaller QR codes</li>
+                  <li>• Test your QR code before printing</li>
                 </ul>
               </div>
             </div>
